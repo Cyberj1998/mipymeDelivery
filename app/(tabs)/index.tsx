@@ -16,17 +16,17 @@ import ProductCard from "../../components/ProductCard";
 
 //------------------appwrite credentials
 import { Client, TablesDB } from "react-native-appwrite";
-const APPWRITE_PROJECT_NAME = "delivery";
-const PROJECT_ID = "69eb7dce000baa1aca45";
+const APPWRITE_PROJECT_NAME = "New project";
+const PROJECT_ID = "69f7be4d001510953812";
 const ENDPOINT = "https://nyc.cloud.appwrite.io/v1";
 
 //-----------------images imports
-import burger from "../../assets/images/icons/burger.png";
-import dessert from "../../assets/images/icons/dessert.png";
-import drinkIcon from "../../assets/images/icons/drink.png";
-import food from "../../assets/images/icons/food.png";
+import AseoIcon from "../../assets/images/icons/aseo.png";
+import BebidasIcon from "../../assets/images/icons/bebidas.png";
+import CarnicosIcon from "../../assets/images/icons/carnicos.png";
+import ConfiturasIcon from "../../assets/images/icons/confituras.png";
 import Logo from "../../assets/images/icons/logo-2.png";
-import pizza from "../../assets/images/icons/pizza.png";
+import Micelaneas from "../../assets/images/icons/micelaneas.png";
 import SearchIcon from "../../assets/images/icons/search.png";
 
 export default function HomeScreen() {
@@ -54,24 +54,24 @@ export default function HomeScreen() {
       image: "",
     },
     {
-      category: "pizza",
-      image: pizza,
+      category: "aseo",
+      image: AseoIcon,
     },
     {
-      category: "burger",
-      image: burger,
+      category: "bebidas",
+      image: BebidasIcon,
     },
     {
-      category: "bebida",
-      image: drinkIcon,
+      category: "carnicos",
+      image: CarnicosIcon,
     },
     {
-      category: "postre",
-      image: dessert,
+      category: "confituras",
+      image: ConfiturasIcon,
     },
     {
-      category: "completa",
-      image: food,
+      category: "micelaneas",
+      image: Micelaneas,
     },
   ];
 
@@ -84,7 +84,7 @@ export default function HomeScreen() {
   const tablesDB = new TablesDB(client);
 
   const handleCallRows = () => {
-    let promise = tablesDB.listRows("69eb7f47001393ab2d33", "products");
+    let promise = tablesDB.listRows("69f7bf3d003d2045f024", "products");
 
     promise.then(
       function (response) {
@@ -174,6 +174,7 @@ const styles = StyleSheet.create({
   },
   flatList: {
     width: "100%",
+    marginBottom: 80,
     flexWrap: "wrap",
   },
   flatListContentContainer: {
@@ -192,11 +193,10 @@ const styles = StyleSheet.create({
     width: 55,
   },
   categoryButton: {
-    backgroundColor: "#48d769",
+    backgroundColor: "#488dd7",
     borderRadius: 20,
     padding: 10,
     margin: 10,
-    width: 100,
     height: 40,
     display: "flex",
     flexDirection: "row",

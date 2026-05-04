@@ -5,11 +5,11 @@ import useCartStore from "../store/CartSlice";
 
 //-----------------icons
 
-import burger from "../assets/images/icons/burger.png";
-import postre from "../assets/images/icons/dessert.png";
-import bebida from "../assets/images/icons/drink.png";
-import completa from "../assets/images/icons/food.png";
-import pizza from "../assets/images/icons/pizza.png";
+import AseoIcon from "../assets/images/icons/aseo.png";
+import BebidasIcon from "../assets/images/icons/bebidas.png";
+import CarnicosIcon from "../assets/images/icons/carnicos.png";
+import ConfiturasIcon from "../assets/images/icons/confituras.png";
+import Micelaneas from "../assets/images/icons/micelaneas.png";
 import Store from "../assets/images/icons/store.png";
 
 export default function ProductCard({ item }) {
@@ -32,16 +32,16 @@ export default function ProductCard({ item }) {
           <Image
             style={styles.categoryIcon}
             source={
-              item.category === "pizza"
-                ? pizza
-                : item.category === "completa"
-                  ? completa
-                  : item.category === "postre"
-                    ? postre
-                    : item.category === "burger"
-                      ? burger
-                      : item.category === "bebida"
-                        ? bebida
+              item.category === "aseo"
+                ? AseoIcon
+                : item.category === "bebidas"
+                  ? BebidasIcon
+                  : item.category === "carnicos"
+                    ? CarnicosIcon
+                    : item.category === "confituras"
+                      ? ConfiturasIcon
+                      : item.category === "micelaneas"
+                        ? Micelaneas
                         : ""
             }
           />
@@ -100,10 +100,10 @@ const styles = StyleSheet.create({
   productPrice: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#007bff",
+    color: "#00a746",
   },
   addButton: {
-    backgroundColor: "#48d769",
+    backgroundColor: "#15caca",
     borderRadius: 8,
     paddingVertical: 10,
     paddingHorizontal: 20,
