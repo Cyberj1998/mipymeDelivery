@@ -124,7 +124,7 @@ export default function HomeScreen() {
       <View style={styles.searchBar}>
         <TextInput
           style={styles.searchInput}
-          placeholder="Introdusca su direccion..."
+          placeholder="buscar..."
           placeholderTextColor="#999"
           multiline={true}
           textAlignVertical="top"
