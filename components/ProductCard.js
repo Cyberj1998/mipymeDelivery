@@ -1,3 +1,4 @@
+import { Audio } from "expo-av";
 import { Image } from "expo-image";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -13,11 +14,31 @@ import ConfiturasIcon from "../assets/images/icons/confituras.png";
 import Micelaneas from "../assets/images/icons/micelaneas.png";
 import Store from "../assets/images/icons/store.png";
 
+let soundObject = null;
+
 export default function ProductCard({ item }) {
   const addToCart = useCartStore((state) => state.addToCart);
 
+  const playAddToCartSound = async () => {
+    try {
+      // Load sound if not already loaded
+      if (!soundObject) {
+        const { sound } = await Audio.Sound.createAsync(
+          require("../assets/sounds/blop.mp3"), // Path to your file
+        );
+        soundObject = sound;
+      }
+
+      // Play from start
+      await soundObject.replayAsync();
+    } catch (error) {
+      console.log("Error playing sound", error);
+    }
+  };
+
   const handleAddToCart = (item) => {
     addToCart(item);
+    playAddToCartSound();
     console.log(item);
   };
 

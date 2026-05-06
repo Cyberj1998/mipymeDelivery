@@ -1,7 +1,8 @@
+import useCartStore from "@/store/CartSlice";
 import { Image } from "expo-image";
 import { Tabs } from "expo-router";
-import React from "react";
-import { StyleSheet, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -9,6 +10,15 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 export default function TabLayout() {
   const colorScheme = useColorScheme() ?? "light";
   const insets = useSafeAreaInsets();
+
+  const getTotalQuantity = useCartStore((state) => state.getTotalQuantity);
+  const cart = useCartStore((state) => state.cart);
+
+  const [totalQuantityDisplay, setTotalQuantityDisplay] = useState(0);
+
+  useEffect(() => {
+    setTotalQuantityDisplay(getTotalQuantity());
+  }, [cart]);
 
   return (
     <Tabs
@@ -31,7 +41,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Tienda",
+          title: "",
           tabBarIcon: ({ focused }) => (
             <View
               style={[
@@ -47,6 +57,7 @@ export default function TabLayout() {
                 source={require("../../assets/images/store.png")}
                 contentFit="cover"
               />
+              <Text style={styles.title}>TIENDA</Text>
             </View>
           ),
         }}
@@ -54,7 +65,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="explore"
         options={{
-          title: "Carrito",
+          title: "",
           tabBarIcon: ({ focused }) => (
             <View
               style={[
@@ -62,6 +73,7 @@ export default function TabLayout() {
                 { backgroundColor: focused ? "#ffffff" : "transparent" },
               ]}
             >
+              <Text style={styles.totalQuantity}>{totalQuantityDisplay}</Text>
               <Image
                 style={[
                   styles.icon,
@@ -70,6 +82,7 @@ export default function TabLayout() {
                 source={require("../../assets/images/cart.png")}
                 contentFit="cover"
               />
+              <Text style={styles.title}>CARRITO</Text>
             </View>
           ),
         }}
@@ -99,9 +112,9 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   iconWrapper: {
-    width: 45,
-    height: 35,
-    borderRadius: 20,
+    height: 50,
+    width: 50,
+    borderRadius: 50,
     justifyContent: "center",
     alignItems: "center",
     marginBottom: -5,
@@ -109,5 +122,17 @@ const styles = StyleSheet.create({
   icon: {
     width: 24,
     height: 24,
+  },
+  title: {
+    fontSize: 10,
+    fontWeight: 500,
+  },
+  totalQuantity: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    marginTop: -8,
+    fontWeight: 500,
+    fontSize: 20,
   },
 });

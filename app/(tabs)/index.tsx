@@ -17,8 +17,9 @@ import ProductCard from "../../components/ProductCard";
 //------------------appwrite credentials
 import { Client, TablesDB } from "react-native-appwrite";
 const APPWRITE_PROJECT_NAME = "New project";
-const PROJECT_ID = "69f7be4d001510953812";
-const ENDPOINT = "https://nyc.cloud.appwrite.io/v1";
+const PROJECT_ID = process.env.EXPO_PUBLIC_PROJECT_ID!;
+const ENDPOINT = process.env.EXPO_PUBLIC_ENDPOINT!;
+const DATABASE_ID = process.env.EXPO_PUBLIC_DATABASE_ID!;
 
 //-----------------images imports
 import AseoIcon from "../../assets/images/icons/aseo.png";
@@ -84,7 +85,7 @@ export default function HomeScreen() {
   const tablesDB = new TablesDB(client);
 
   const handleCallRows = () => {
-    let promise = tablesDB.listRows("69f7bf3d003d2045f024", "products");
+    let promise = tablesDB.listRows(DATABASE_ID, "products");
 
     promise.then(
       function (response) {
@@ -139,11 +140,18 @@ export default function HomeScreen() {
         {categories.map((category, index) => (
           <TouchableOpacity
             key={index}
-            style={styles.categoryButton}
+            style={[
+              styles.categoryButton,
+              category.category === "todo" && { width: 80 },
+            ]}
             onPress={() => handleCategory(category)}
           >
             <Text style={styles.categoryText}>{category.category}</Text>
-            <Image style={styles.categoryIcon} source={category.image} />
+            {category.image ? (
+              <Image style={styles.categoryIcon} source={category.image} />
+            ) : (
+              ""
+            )}
           </TouchableOpacity>
         ))}
       </ScrollView>
