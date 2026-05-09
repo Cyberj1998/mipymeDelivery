@@ -15,7 +15,7 @@ import MyLoader from "../../components/MyLoader";
 import ProductCard from "../../components/ProductCard";
 
 //------------------appwrite credentials
-import { Client, TablesDB } from "react-native-appwrite";
+import { Client, Query, TablesDB } from "react-native-appwrite";
 const APPWRITE_PROJECT_NAME = "New project";
 const PROJECT_ID = process.env.EXPO_PUBLIC_PROJECT_ID!;
 const ENDPOINT = process.env.EXPO_PUBLIC_ENDPOINT!;
@@ -80,26 +80,43 @@ export default function HomeScreen() {
   const [searchValue, setSearchValue] = useState("");
   const [productsDatabase, setProductsDatabase] = useState<Product[]>([]);
 
+  //----------------pagination states
+  const [offset, setOffset] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const LIMIT = 10;
+
   const client = new Client().setEndpoint(ENDPOINT).setProject(PROJECT_ID);
 
   const tablesDB = new TablesDB(client);
 
-  const handleCallRows = () => {
-    let promise = tablesDB.listRows(DATABASE_ID, "products");
+  const handleCallRows = async (limit: number, currentOffset: number) => {
+    if (loading || !hasMore) return;
 
-    promise.then(
-      function (response) {
-        setProductsDatabase(response.rows as unknown as Product[]);
-        console.log(productsDatabase);
-      },
-      function (error) {
-        console.log(error);
-      },
-    );
+    setLoading(true);
+    try {
+      const response = await tablesDB.listRows(DATABASE_ID, "products", [
+        Query.limit(limit),
+        Query.offset(currentOffset),
+      ]);
+
+      const newRows = response.rows as unknown as Product[];
+
+      if (newRows.length < LIMIT) {
+        setHasMore(false);
+      }
+
+      setProductsDatabase((prev) => [...prev, ...newRows]);
+      setOffset((prev) => prev + limit);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    handleCallRows();
+    handleCallRows(LIMIT, offset);
   }, []);
 
   const filteredProducts = useMemo(() => {
@@ -167,6 +184,11 @@ export default function HomeScreen() {
           keyExtractor={(item) => item.$id}
           numColumns={2}
           contentContainerStyle={styles.flatListContentContainer}
+          onEndReached={() => handleCallRows(LIMIT, offset)}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={
+            loading ? <Text style={styles.textLoading}>Cargando...</Text> : null
+          }
         />
       )}
     </SafeAreaView>
@@ -247,5 +269,10 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
+  },
+  textLoading: {
+    fontSize: 15,
+    fontWeight: 500,
+    color: "#488dd7",
   },
 });
