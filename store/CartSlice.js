@@ -2,6 +2,17 @@ import { create } from "zustand";
 
 const useCartStore = create((set, get) => ({
   cart: [],
+  databaseCache: [],
+
+  //----------------------add to cache
+  addToCache: (product) => {
+    const cache = get().databaseCache;
+    const exists = cache.find((item) => item.$id === product.$id);
+
+    if (!exists) {
+      set({ databaseCache: [...cache, product] });
+    }
+  },
 
   //-----------------add to cart
 

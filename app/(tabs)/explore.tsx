@@ -58,7 +58,7 @@ export default function TabTwoScreen() {
 
     const messageItems = cart
       .map(
-        (item) =>
+        (item: any) =>
           `${item.name}, Precio: ${item.price}, Cantidad: ${item.quantity}`,
       )
       .join("\n");
