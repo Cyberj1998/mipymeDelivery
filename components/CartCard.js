@@ -9,18 +9,35 @@ export default function CartCard({ item }) {
   const removeFromCart = useCartStore((state) => state.removeFromCart);
   const increaseQuantity = useCartStore((state) => state.increaseQuantity);
   const decreaseQuantity = useCartStore((state) => state.decreaseQuantity);
+  const theme = useCartStore((state) => state.theme);
 
   return (
-    <View style={styles.card}>
+    <View
+      style={[
+        styles.card,
+        { backgroundColor: theme === "light" ? "#eeeeee" : "#4b4c54" },
+      ]}
+    >
       <View style={styles.infoContainer}>
         <Image source={{ uri: item.image }} style={styles.image} />
-        <Text style={styles.name}>{item.name}</Text>
+        <Text
+          style={[
+            styles.name,
+            { color: theme === "light" ? "#444444" : "#fff" },
+          ]}
+        >
+          {item.name}
+        </Text>
       </View>
       <View style={styles.quantityContainer}>
         <TouchableOpacity onPress={() => decreaseQuantity(item.$id)}>
           <Image source={Left} style={styles.arrow} />
         </TouchableOpacity>
-        <Text style={styles.quantity}>{item.quantity}</Text>
+        <Text
+          style={[styles.quantity, { color: theme === "light" ? "" : "white" }]}
+        >
+          {item.quantity}
+        </Text>
         <TouchableOpacity onPress={() => increaseQuantity(item.$id)}>
           <Image source={Right} style={styles.arrow} />
         </TouchableOpacity>
@@ -31,14 +48,15 @@ export default function CartCard({ item }) {
       >
         <Image style={styles.delete} source={Icon} />
       </TouchableOpacity>
-      <Text>$: {item.price}</Text>
+      <Text style={[styles.price, { color: theme === "light" ? "" : "white" }]}>
+        $: {item.price}
+      </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#eeeeee",
     borderRadius: 20,
     width: "90%",
     height: 120,
@@ -68,7 +86,6 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 12,
-    color: "#444444",
     lineHeight: 24,
   },
   deleteButton: {
@@ -93,6 +110,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   quantity: {
+    fontSize: 25,
+  },
+  price: {
     fontSize: 20,
   },
 });

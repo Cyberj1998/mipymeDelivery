@@ -25,6 +25,7 @@ export default function TabTwoScreen() {
   const getTotalPrice = useCartStore((state) => state.getTotalPrice);
   const getTotalQuantity = useCartStore((state) => state.getTotalQuantity);
   const clearCart = useCartStore((state) => state.clearCart);
+  const theme = useCartStore((state) => state.theme);
 
   interface Product {
     $id: string;
@@ -75,7 +76,7 @@ export default function TabTwoScreen() {
         await Linking.openURL(whatsappUrl);
         clearCart();
       } else {
-        Alert.alert("Introdusca su direccion por favor");
+        Alert.alert("Introduzca su direccion");
       }
     } catch (error) {
       Alert.alert(
@@ -91,9 +92,20 @@ export default function TabTwoScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        { backgroundColor: theme === "light" ? "white" : "#272727" },
+      ]}
+    >
       {modal ? (
-        <KeyboardAvoidingView behavior="height" style={styles.modal}>
+        <KeyboardAvoidingView
+          behavior="height"
+          style={[
+            styles.modal,
+            { backgroundColor: theme === "light" ? "#fff" : "#3a3a3e" },
+          ]}
+        >
           <TouchableOpacity
             onPress={() => handleModal()}
             style={styles.closeButton}
@@ -101,8 +113,12 @@ export default function TabTwoScreen() {
             <Image source={CloseIcon} style={styles.closeIcon} />
           </TouchableOpacity>
           <TextInput
-            style={styles.textArea}
-            placeholder="Introdusca su direccion..."
+            style={[
+              styles.textArea,
+              { backgroundColor: theme === "light" ? "#ffff" : "#212121" },
+              { color: theme === "light" ? "" : "white" },
+            ]}
+            placeholder="Introduzca su direccion..."
             placeholderTextColor="#999"
             multiline={true}
             textAlignVertical="top"
@@ -110,7 +126,10 @@ export default function TabTwoScreen() {
             value={address}
           />
           <TouchableOpacity
-            style={styles.checkoutButton}
+            style={[
+              styles.checkoutButton,
+              { backgroundColor: theme === "light" ? "#15caca" : "#dbabe1" },
+            ]}
             onPress={() => handleRequest()}
           >
             <Text style={styles.checkoutText}>Comprar</Text>
@@ -124,7 +143,14 @@ export default function TabTwoScreen() {
         <View style={styles.emptyCarContainer}>
           <Image style={styles.emptyCarImage} source={CartBackground} />
           <View style={styles.emptyCarTextContainer}>
-            <Text style={styles.emptyCarText}>carrito vacio</Text>
+            <Text
+              style={[
+                styles.emptyCarText,
+                { color: theme === "light" ? "black" : "white" },
+              ]}
+            >
+              Carrito Vacío
+            </Text>
             <Image style={styles.emptyCarIcon} source={EmptyCar} />
           </View>
         </View>
@@ -140,19 +166,49 @@ export default function TabTwoScreen() {
       {cart.length === 0 ? (
         ""
       ) : (
-        <View style={styles.invisibleContainer}>
-          <View style={styles.paymentContainer}>
-            <Text style={styles.totalQuantityText}>
+        <View
+          style={[
+            styles.invisibleContainer,
+            { backgroundColor: theme === "light" ? "#ffffff" : "#272727" },
+          ]}
+        >
+          <View
+            style={[
+              styles.paymentContainer,
+              { backgroundColor: theme === "light" ? "#eeeeee" : "#4b4c54" },
+            ]}
+          >
+            <Text
+              style={[
+                styles.totalQuantityText,
+                { color: theme === "light" ? "black" : "white" },
+              ]}
+            >
               productos: {totalQuantity}
             </Text>
-            <Text style={styles.texttTotalPrice}>
+            <Text
+              style={[
+                styles.texttTotalPrice,
+                { color: theme === "light" ? "black" : "white" },
+              ]}
+            >
               total a pagar: $ {totalPrice.toFixed()}
             </Text>
             <TouchableOpacity
-              style={styles.checkoutButton}
+              style={[
+                styles.checkoutButton,
+                { backgroundColor: theme === "light" ? "#15caca" : "#dbabe1" },
+              ]}
               onPress={() => handleModal()}
             >
-              <Text style={styles.checkoutText}>Direccion</Text>
+              <Text
+                style={[
+                  styles.checkoutText,
+                  { color: theme === "light" ? "#fff" : "black" },
+                ]}
+              >
+                Dirección
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -183,14 +239,12 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "45%",
     marginBottom: 75,
-    backgroundColor: "#ffffff",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
   },
   paymentContainer: {
-    backgroundColor: "#eeeeee",
     height: "100%",
     width: "93%",
     borderRadius: 20,
@@ -201,7 +255,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   checkoutButton: {
-    backgroundColor: "#15caca",
     borderRadius: 8,
     paddingVertical: 10,
     paddingHorizontal: 20,
@@ -214,19 +267,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   checkoutText: {
-    color: "#ffffff",
     fontSize: 14,
     fontWeight: "bold",
     textAlign: "center",
   },
   texttTotalPrice: {
-    color: "black",
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
   },
   totalQuantityText: {
-    color: "black",
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
@@ -237,7 +287,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     zIndex: 5,
     top: 50,
-    backgroundColor: "#fff",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.1,
@@ -259,7 +308,6 @@ const styles = StyleSheet.create({
   textArea: {
     height: 150,
     width: "90%",
-    backgroundColor: "#ffffff",
     borderRadius: 10,
     padding: 15,
     fontSize: 16,
@@ -284,7 +332,6 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   emptyCarText: {
-    color: "black",
     fontSize: 25,
     fontWeight: 500,
   },

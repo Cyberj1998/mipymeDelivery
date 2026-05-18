@@ -13,6 +13,7 @@ export default function TabLayout() {
 
   const getTotalQuantity = useCartStore((state) => state.getTotalQuantity);
   const cart = useCartStore((state) => state.cart);
+  const theme = useCartStore((state) => state.theme);
 
   const [totalQuantityDisplay, setTotalQuantityDisplay] = useState(0);
 
@@ -31,6 +32,7 @@ export default function TabLayout() {
             left: 20,
             right: 20,
             height: 60,
+            backgroundColor: theme === "light" ? "#488dd7" : "#9c62a3",
           },
         ],
         tabBarLabelStyle: styles.tabBarLabel,
@@ -93,7 +95,6 @@ export default function TabLayout() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: "#488dd7",
     borderTopWidth: 0,
     borderRadius: 100,
     paddingBottom: 10,

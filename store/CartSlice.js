@@ -3,6 +3,14 @@ import { create } from "zustand";
 const useCartStore = create((set, get) => ({
   cart: [],
   databaseCache: [],
+  theme: "light",
+
+  //---------------------toggle theme
+  toggleTheme: () => {
+    set((state) => ({
+      theme: state.theme === "light" ? "dark" : "light",
+    }));
+  },
 
   //----------------------add to cache
   addToCache: (product) => {

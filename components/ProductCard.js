@@ -17,14 +17,14 @@ import Store from "../assets/images/icons/store.png";
 let soundObject = null;
 
 export default function ProductCard({ item }) {
+  const theme = useCartStore((state) => state.theme);
   const addToCart = useCartStore((state) => state.addToCart);
 
   const playAddToCartSound = async () => {
     try {
-      // Load sound if not already loaded
       if (!soundObject) {
         const { sound } = await Audio.Sound.createAsync(
-          require("../assets/sounds/blop.mp3"), // Path to your file
+          require("../assets/sounds/blop.mp3"),
         );
         soundObject = sound;
       }
@@ -43,10 +43,21 @@ export default function ProductCard({ item }) {
   };
 
   return (
-    <View style={styles.productCard}>
+    <View
+      style={[
+        styles.productCard,
+        { backgroundColor: theme === "light" ? "#eeeeee" : "#4b4c54" },
+      ]}
+    >
       <Image source={{ uri: item.image }} style={styles.productImage} />
       <View style={styles.textContainer}>
-        <Text style={styles.productName} numberOfLines={2}>
+        <Text
+          style={[
+            styles.productName,
+            { color: theme === "light" ? "#333333" : "#fff" },
+          ]}
+          numberOfLines={2}
+        >
           {item.name}
         </Text>
         <View style={styles.priceCategoryContainer}>
@@ -70,13 +81,30 @@ export default function ProductCard({ item }) {
         </View>
         <View style={styles.storeContainer}>
           <Image source={Store} style={styles.storeIcon} />
-          <Text style={styles.storeText}>{item.local}</Text>
+          <Text
+            style={[
+              styles.storeText,
+              { color: theme === "light" ? "" : "#fff" },
+            ]}
+          >
+            {item.local}
+          </Text>
         </View>
         <TouchableOpacity
-          style={styles.addButton}
+          style={[
+            styles.addButton,
+            { backgroundColor: theme === "light" ? "#15caca" : "#dbabe1" },
+          ]}
           onPress={() => handleAddToCart(item)}
         >
-          <Text style={styles.addButtonText}>añadir al carrito</Text>
+          <Text
+            style={[
+              styles.addButtonText,
+              { color: theme === "light" ? "#ffff" : "black" },
+            ]}
+          >
+            añadir al carrito
+          </Text>
           <Image source={CartIcon} style={styles.cartIcon} />
         </TouchableOpacity>
       </View>
@@ -86,7 +114,6 @@ export default function ProductCard({ item }) {
 
 const styles = StyleSheet.create({
   productCard: {
-    backgroundColor: "#eeeeee",
     borderRadius: 12,
     marginHorizontal: 10,
     marginVertical: 8,
@@ -118,7 +145,6 @@ const styles = StyleSheet.create({
     width: "100%",
     fontWeight: "bold",
     marginBottom: 6,
-    color: "#333333",
   },
   productPrice: {
     fontSize: 18,
@@ -126,7 +152,6 @@ const styles = StyleSheet.create({
     color: "#00a746",
   },
   addButton: {
-    backgroundColor: "#15caca",
     borderRadius: 8,
     paddingVertical: 10,
     paddingHorizontal: 20,
@@ -139,7 +164,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   addButtonText: {
-    color: "#ffffff",
     fontSize: 12,
     fontWeight: "bold",
     textAlign: "center",

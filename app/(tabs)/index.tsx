@@ -28,7 +28,9 @@ import CarnicosIcon from "../../assets/images/icons/carnicos.png";
 import ConfiturasIcon from "../../assets/images/icons/confituras.png";
 import Logo from "../../assets/images/icons/logo-2.png";
 import Micelaneas from "../../assets/images/icons/micelaneas.png";
+import Moon from "../../assets/images/icons/moon.png";
 import SearchIcon from "../../assets/images/icons/search.png";
+import Sun from "../../assets/images/icons/sun.png";
 
 //-------------------------cart store imports
 import useCartStore from "@/store/CartSlice";
@@ -92,6 +94,16 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const LIMIT = 10;
+
+  //-----------------dark and light states
+  const toggleTheme = useCartStore((state) => state.toggleTheme);
+  const theme = useCartStore((state) => state.theme);
+  const [dark, setDark] = useState(false);
+
+  const handleTheme = () => {
+    setDark((prev) => !prev);
+    toggleTheme();
+  };
 
   const client = new Client().setEndpoint(ENDPOINT).setProject(PROJECT_ID);
 
@@ -161,8 +173,32 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        { backgroundColor: theme === "light" ? "white" : "#272727" },
+      ]}
+    >
       <View style={styles.navbar}>
+        <TouchableOpacity
+          onPress={() => handleTheme()}
+          style={[
+            styles.toggleContainer,
+            { alignItems: theme === "light" ? "flex-start" : "flex-end" },
+            { backgroundColor: theme === "light" ? "#5f5f65" : "#dadae7" },
+          ]}
+        >
+          <View style={styles.SunMoonContainer}>
+            <Image source={Sun} style={styles.SunMoon} />
+            <Image source={Moon} style={styles.SunMoon} />
+          </View>
+          <View
+            style={[
+              styles.toggle,
+              { backgroundColor: theme === "light" ? "#dadae7" : "#5f5f65" },
+            ]}
+          ></View>
+        </TouchableOpacity>
         <Image style={styles.logo} source={Logo} />
       </View>
       <View style={styles.searchBar}>
@@ -186,6 +222,7 @@ export default function HomeScreen() {
             style={[
               styles.categoryButton,
               category.category === "todo" && { width: 80 },
+              { backgroundColor: theme === "light" ? "#488dd7" : "#9c62a3" },
             ]}
             onPress={() => handleCategory(category)}
           >
@@ -226,7 +263,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
   },
   flatList: {
     width: "100%",
@@ -241,15 +277,15 @@ const styles = StyleSheet.create({
     height: 40,
     width: "100%",
     display: "flex",
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
   },
   logo: {
-    height: 55,
-    width: 55,
+    height: 40,
+    width: 40,
   },
   categoryButton: {
-    backgroundColor: "#488dd7",
     borderRadius: 20,
     padding: 10,
     margin: 10,
@@ -276,7 +312,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#989898",
     borderRadius: 15,
-    width: "70%",
+    width: "80%",
   },
   searchIcon: {
     height: 30,
@@ -300,5 +336,33 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 500,
     color: "#488dd7",
+  },
+  toggleContainer: {
+    height: 30,
+    width: 60,
+    borderRadius: 50,
+    position: "absolute",
+    left: 10,
+    display: "flex",
+  },
+  toggle: {
+    height: 25,
+    width: 25,
+    borderRadius: 100,
+    position: "absolute",
+    margin: 3,
+  },
+  SunMoon: {
+    height: 20,
+    width: 20,
+    margin: 4,
+  },
+  SunMoonContainer: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 });
