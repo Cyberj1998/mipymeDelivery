@@ -176,7 +176,7 @@ export default function HomeScreen() {
     <SafeAreaView
       style={[
         styles.container,
-        { backgroundColor: theme === "light" ? "white" : "#272727" },
+        { backgroundColor: theme === "light" ? "white" : "#352F44" },
       ]}
     >
       <View style={styles.navbar}>
@@ -222,7 +222,7 @@ export default function HomeScreen() {
             style={[
               styles.categoryButton,
               category.category === "todo" && { width: 80 },
-              { backgroundColor: theme === "light" ? "#488dd7" : "#9c62a3" },
+              { backgroundColor: theme === "light" ? "#488dd7" : "#5C5470" },
             ]}
             onPress={() => handleCategory(category)}
           >

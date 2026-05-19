@@ -32,7 +32,7 @@ export default function TabLayout() {
             left: 20,
             right: 20,
             height: 60,
-            backgroundColor: theme === "light" ? "#488dd7" : "#9c62a3",
+            backgroundColor: theme === "light" ? "#488dd7" : "#b0a1d5",
           },
         ],
         tabBarLabelStyle: styles.tabBarLabel,

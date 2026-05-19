@@ -9,7 +9,10 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "LSApplicationQueriesSchemes": ["whatsapp"]
+      }
     },
     "android": {
       "softwareKeyboardLayoutMode": "pan",
@@ -38,6 +41,23 @@
           "backgroundColor": "#ffffff",
           "dark": {
             "backgroundColor": "#000000"
+          }
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "queries": {
+              "intentFilters": [
+                {
+                  "action": "android.intent.action.VIEW",
+                  "data": {
+                    "scheme": "whatsapp"
+                  }
+                }
+              ]
+            }
           }
         }
       ]

@@ -46,7 +46,7 @@ export default function ProductCard({ item }) {
     <View
       style={[
         styles.productCard,
-        { backgroundColor: theme === "light" ? "#eeeeee" : "#4b4c54" },
+        { backgroundColor: theme === "light" ? "#eeeeee" : "#5C5470" },
       ]}
     >
       <Image source={{ uri: item.image }} style={styles.productImage} />
@@ -93,7 +93,7 @@ export default function ProductCard({ item }) {
         <TouchableOpacity
           style={[
             styles.addButton,
-            { backgroundColor: theme === "light" ? "#15caca" : "#dbabe1" },
+            { backgroundColor: theme === "light" ? "#15caca" : "#b0a1d5" },
           ]}
           onPress={() => handleAddToCart(item)}
         >

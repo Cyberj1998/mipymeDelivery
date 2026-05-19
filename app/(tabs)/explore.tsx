@@ -55,8 +55,12 @@ export default function TabTwoScreen() {
   );
 
   const handleShareToWhatsApp = async () => {
-    const phoneNumber = "50219524";
+    if (!address || address.trim().length === 0) {
+      Alert.alert("Error", "Por favor, introduzca su dirección");
+      return;
+    }
 
+    const phoneNumber = "50219524";
     const messageItems = cart
       .map(
         (item: any) =>
@@ -65,24 +69,22 @@ export default function TabTwoScreen() {
       .join("\n");
 
     const message = `${messageItems}\nTotal a pagar: ${totalPrice}, Direccion: ${address}`;
-
     const encodedMessage = encodeURIComponent(message);
+
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    const whatsappScheme = `whatsapp://send?text=${encodedMessage}`;
 
     try {
-      const supported = await Linking.canOpenURL(whatsappUrl);
+      const supported = await Linking.canOpenURL(whatsappScheme);
 
-      if (supported && address.length != 0) {
+      if (supported) {
         await Linking.openURL(whatsappUrl);
         clearCart();
       } else {
-        Alert.alert("Introduzca su direccion");
+        Alert.alert("Error", "WhatsApp no está instalado en este dispositivo");
       }
     } catch (error) {
-      Alert.alert(
-        "Error",
-        "Ocurrió un problema al intentar abrir la aplicación",
-      );
+      Alert.alert("Error", "Ocurrió un problema al intentar abrir WhatsApp");
       console.error("Error opening WhatsApp:", error);
     }
   };
@@ -95,7 +97,7 @@ export default function TabTwoScreen() {
     <SafeAreaView
       style={[
         styles.container,
-        { backgroundColor: theme === "light" ? "white" : "#272727" },
+        { backgroundColor: theme === "light" ? "white" : "#352F44" },
       ]}
     >
       {modal ? (
@@ -103,7 +105,7 @@ export default function TabTwoScreen() {
           behavior="height"
           style={[
             styles.modal,
-            { backgroundColor: theme === "light" ? "#fff" : "#3a3a3e" },
+            { backgroundColor: theme === "light" ? "#fff" : "#383344" },
           ]}
         >
           <TouchableOpacity
@@ -115,7 +117,7 @@ export default function TabTwoScreen() {
           <TextInput
             style={[
               styles.textArea,
-              { backgroundColor: theme === "light" ? "#ffff" : "#212121" },
+              { backgroundColor: theme === "light" ? "#ffff" : "#5C5470" },
               { color: theme === "light" ? "" : "white" },
             ]}
             placeholder="Introduzca su direccion..."
@@ -128,7 +130,7 @@ export default function TabTwoScreen() {
           <TouchableOpacity
             style={[
               styles.checkoutButton,
-              { backgroundColor: theme === "light" ? "#15caca" : "#dbabe1" },
+              { backgroundColor: theme === "light" ? "#15caca" : "#b0a1d5" },
             ]}
             onPress={() => handleRequest()}
           >
@@ -169,13 +171,13 @@ export default function TabTwoScreen() {
         <View
           style={[
             styles.invisibleContainer,
-            { backgroundColor: theme === "light" ? "#ffffff" : "#272727" },
+            { backgroundColor: theme === "light" ? "#ffffff" : "#352F44" },
           ]}
         >
           <View
             style={[
               styles.paymentContainer,
-              { backgroundColor: theme === "light" ? "#eeeeee" : "#4b4c54" },
+              { backgroundColor: theme === "light" ? "#eeeeee" : "#5C5470" },
             ]}
           >
             <Text
@@ -197,7 +199,7 @@ export default function TabTwoScreen() {
             <TouchableOpacity
               style={[
                 styles.checkoutButton,
-                { backgroundColor: theme === "light" ? "#15caca" : "#dbabe1" },
+                { backgroundColor: theme === "light" ? "#15caca" : "#b0a1d5" },
               ]}
               onPress={() => handleModal()}
             >
