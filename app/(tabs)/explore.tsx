@@ -75,17 +75,9 @@ export default function TabTwoScreen() {
     const whatsappScheme = `whatsapp://send?text=${encodedMessage}`;
 
     try {
-      const supported = await Linking.canOpenURL(whatsappScheme);
-
-      if (supported) {
-        await Linking.openURL(whatsappUrl);
-        clearCart();
-      } else {
-        Alert.alert("Error", "WhatsApp no está instalado en este dispositivo");
-      }
+      await Linking.canOpenURL(whatsappUrl);
     } catch (error) {
-      Alert.alert("Error", "Ocurrió un problema al intentar abrir WhatsApp");
-      console.error("Error opening WhatsApp:", error);
+      Alert.alert("Error", "No se pudo abrir WhatsApp");
     }
   };
 
