@@ -65,6 +65,54 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="favorite"
+        options={{
+          title: "",
+          tabBarIcon: ({ focused }) => (
+            <View
+              style={[
+                styles.iconWrapper,
+                { backgroundColor: focused ? "#ffffff" : "transparent" },
+              ]}
+            >
+              <Image
+                style={[
+                  styles.icon,
+                  { tintColor: focused ? "#488dd7" : "#333333" },
+                ]}
+                source={require("../../assets/images/icons/heart.png")}
+                contentFit="cover"
+              />
+              <Text style={styles.title}>FAVORITO</Text>
+            </View>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="ofertas"
+        options={{
+          title: "",
+          tabBarIcon: ({ focused }) => (
+            <View
+              style={[
+                styles.iconWrapper,
+                { backgroundColor: focused ? "#ffffff" : "transparent" },
+              ]}
+            >
+              <Image
+                style={[
+                  styles.icon,
+                  { tintColor: focused ? "#488dd7" : "#333333" },
+                ]}
+                source={require("../../assets/images/icons/offer.png")}
+                contentFit="cover"
+              />
+              <Text style={styles.title}>OFERTAS</Text>
+            </View>
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="explore"
         options={{
           title: "",

@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Audio } from "expo-av";
 import { Image } from "expo-image";
 import React from "react";
@@ -11,15 +12,20 @@ import AseoIcon from "../assets/images/icons/aseo.png";
 import BebidasIcon from "../assets/images/icons/bebidas.png";
 import CarnicosIcon from "../assets/images/icons/carnicos.png";
 import ConfiturasIcon from "../assets/images/icons/confituras.png";
+import Heart from "../assets/images/icons/heart.png";
 import Micelaneas from "../assets/images/icons/micelaneas.png";
+import Offer from "../assets/images/icons/offer.png";
 import Store from "../assets/images/icons/store.png";
 
 let soundObject = null;
+
+const CACHE_STORAGE_KEY = "@shopping_cart";
 
 export default function ProductCard({ item }) {
   const theme = useCartStore((state) => state.theme);
   const addToCart = useCartStore((state) => state.addToCart);
 
+  //-------------------sound function
   const playAddToCartSound = async () => {
     try {
       if (!soundObject) {
@@ -36,6 +42,32 @@ export default function ProductCard({ item }) {
     }
   };
 
+  //---------------------handle add to Cache Storage Function
+
+  const saveToAsyncStorage = async (item) => {
+    try {
+      const jsonValue = await AsyncStorage.getItem(CACHE_STORAGE_KEY);
+      let cache = jsonValue != null ? JSON.parse(jsonValue) : [];
+
+      const isDuplicate = cache.some((cacheItem) => cacheItem.$id === item.$id);
+
+      if (isDuplicate) {
+        console.log("Item already in cart");
+        return false;
+      }
+
+      // Add and save
+      cache.push(item);
+      await AsyncStorage.setItem(CACHE_STORAGE_KEY, JSON.stringify(cache));
+      console.log(cache);
+      return true;
+    } catch (error) {
+      console.error("AsyncStorage Error:", error);
+      return false;
+    }
+  };
+
+  //---------------------handle add to cart function
   const handleAddToCart = (item) => {
     addToCart(item);
     playAddToCartSound();
@@ -49,6 +81,17 @@ export default function ProductCard({ item }) {
         { backgroundColor: theme === "light" ? "#eeeeee" : "#5C5470" },
       ]}
     >
+      {item.oferta === true ? (
+        <Image source={Offer} style={styles.offerIcon} />
+      ) : (
+        ""
+      )}
+      <TouchableOpacity
+        onPress={() => saveToAsyncStorage(item)}
+        style={styles.addToFavorite}
+      >
+        <Image source={Heart} style={styles.favorite} />
+      </TouchableOpacity>
       <Image source={{ uri: item.image }} style={styles.productImage} />
       <View style={styles.textContainer}>
         <Text
@@ -129,7 +172,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-    overflow: "hidden",
+    overflow: "visible",
   },
   productImage: {
     margin: 5,
@@ -203,5 +246,25 @@ const styles = StyleSheet.create({
   cartIcon: {
     height: 20,
     width: 20,
+  },
+  addToFavorite: {
+    height: 20,
+    width: 20,
+    position: "absolute",
+    top: 5,
+    right: 5,
+    zIndex: 50,
+  },
+  favorite: {
+    height: 20,
+    width: 20,
+  },
+  offerIcon: {
+    height: 20,
+    width: 20,
+    position: "absolute",
+    top: 5,
+    left: 5,
+    zIndex: 50,
   },
 });
