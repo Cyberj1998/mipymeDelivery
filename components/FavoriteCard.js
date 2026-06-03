@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Audio } from "expo-av";
 import { Image } from "expo-image";
 import React from "react";
@@ -21,7 +20,7 @@ let soundObject = null;
 
 const CACHE_STORAGE_KEY = "@shopping_cart";
 
-export default function ProductCard({ item }) {
+export default function ProductCard({ item, onRemove }) {
   const theme = useCartStore((state) => state.theme);
   const addToCart = useCartStore((state) => state.addToCart);
 
@@ -38,36 +37,6 @@ export default function ProductCard({ item }) {
       await soundObject.replayAsync();
     } catch (error) {
       console.log("Error playing sound", error);
-    }
-  };
-
-  //---------------------handle remove from Cache Storage Function
-
-  const removeFromAsyncStorage = async (item) => {
-    try {
-      const jsonValue = await AsyncStorage.getItem(CACHE_STORAGE_KEY);
-      let cache = jsonValue != null ? JSON.parse(jsonValue) : [];
-
-      // Filter out the item with matching $id
-      const updatedCache = cache.filter(
-        (cacheItem) => cacheItem.$id !== item.$id,
-      );
-
-      // Only update storage if something was actually removed
-      if (updatedCache.length !== cache.length) {
-        await AsyncStorage.setItem(
-          CACHE_STORAGE_KEY,
-          JSON.stringify(updatedCache),
-        );
-        console.log("✅ Item removed:", item.$id);
-        return true;
-      }
-
-      console.log("ℹ️ Item not found in storage");
-      return false;
-    } catch (error) {
-      console.error("❌ AsyncStorage Error:", error);
-      return false;
     }
   };
 
@@ -91,7 +60,7 @@ export default function ProductCard({ item }) {
         ""
       )}
       <TouchableOpacity
-        onPress={() => removeFromAsyncStorage(item)}
+        onPress={() => onRemove(item)}
         style={styles.addToFavorite}
       >
         <Image source={DeleteIcon} style={styles.favorite} />

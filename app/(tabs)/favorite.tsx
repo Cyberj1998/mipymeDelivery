@@ -9,8 +9,10 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import banner from "../../assets/images/banner_favorite.png";
 import TrashIcon from "../../assets/images/icons/trash.png";
 import FavoriteCard from "../../components/FavoriteCard";
 const CACHE_STORAGE_KEY = "@shopping_cart";
@@ -27,11 +29,11 @@ export default function favorite() {
   }
 
   const renderProductItem: ListRenderItem<Product> = ({ item }) => (
-    <FavoriteCard item={item} />
+    <FavoriteCard item={item} onRemove={handleRemoveItem} />
   );
 
   //---------------------states
-  const [asyncStorageData, setAsyncStorageData] = useState([]);
+  const [asyncStorageData, setAsyncStorageData] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const theme = useCartStore((state) => state.theme);
 
@@ -70,6 +72,44 @@ export default function favorite() {
       return false;
     }
   };
+  //---------------------handle remove from Cache Storage Function
+
+  const removeFromAsyncStorage = async (item: any) => {
+    try {
+      const jsonValue = await AsyncStorage.getItem(CACHE_STORAGE_KEY);
+      let cache = jsonValue != null ? JSON.parse(jsonValue) : [];
+
+      // Filter out the item with matching $id
+      const updatedCache = cache.filter(
+        (cacheItem: any) => cacheItem.$id !== item.$id,
+      );
+
+      // Only update storage if something was actually removed
+      if (updatedCache.length !== cache.length) {
+        await AsyncStorage.setItem(
+          CACHE_STORAGE_KEY,
+          JSON.stringify(updatedCache),
+        );
+        console.log("✅ Item removed:", item.$id);
+        return true;
+      }
+
+      console.log("ℹ️ Item not found in storage");
+      return false;
+    } catch (error) {
+      console.error("❌ AsyncStorage Error:", error);
+      return false;
+    }
+  };
+
+  //------------------------remove one item callback
+  const handleRemoveItem = async (item: Product) => {
+    const removed = await removeFromAsyncStorage(item);
+    if (removed) {
+      // Update local state immediately – no need to reload from storage
+      setAsyncStorageData((prev) => prev.filter((i) => i.$id !== item.$id));
+    }
+  };
 
   //-----------------use effect
   useFocusEffect(
@@ -90,27 +130,32 @@ export default function favorite() {
         { backgroundColor: theme === "light" ? "white" : "#2b2b2b" },
       ]}
     >
-      <TouchableOpacity
-        style={[
-          styles.cleanCache,
-          { backgroundColor: theme === "light" ? "#3e8dc2" : "#b0a1d5" },
-        ]}
-        onPress={() => clearCartStorage()}
-      >
-        <Image source={TrashIcon} style={styles.trash} />
-        <Text style={styles.cleanCacheText}>Borrar Favoritos</Text>
-      </TouchableOpacity>
-      {!isLoading ? (
-        <FlatList
-          style={styles.flatList}
-          data={asyncStorageData}
-          renderItem={renderProductItem}
-          keyExtractor={(item) => item.$id}
-          contentContainerStyle={styles.flatListContentContainer}
-        />
-      ) : (
-        <Text>Cargando...</Text>
-      )}
+      <View style={styles.banner}>
+        <Image source={banner} style={styles.bannerImage} />
+      </View>
+      <View style={styles.flatlistContainer}>
+        {!isLoading ? (
+          <FlatList
+            style={styles.flatList}
+            data={asyncStorageData}
+            renderItem={renderProductItem}
+            keyExtractor={(item) => item.$id}
+            contentContainerStyle={styles.flatListContentContainer}
+          />
+        ) : (
+          <Text>Cargando...</Text>
+        )}
+        <TouchableOpacity
+          style={[
+            styles.cleanCache,
+            { backgroundColor: theme === "light" ? "#3e8dc2" : "#b0a1d5" },
+          ]}
+          onPress={() => clearCartStorage()}
+        >
+          <Image source={TrashIcon} style={styles.trash} />
+          <Text style={styles.cleanCacheText}>Borrar Favoritos</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
@@ -121,19 +166,31 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  flatlistContainer: {
+    flex: 1,
+    width: "100%",
+    borderWidth: 2,
+    borderColor: "blue",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   flatList: {
     width: "100%",
+    borderWidth: 2,
+    borderColor: "red",
     marginBottom: 80,
     flexWrap: "wrap",
   },
   flatListContentContainer: {
-    paddingHorizontal: 8,
     justifyContent: "center",
+    alignItems: "center",
   },
   cleanCache: {
     borderRadius: 10,
     height: 50,
     width: 120,
+    position: "relative",
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
@@ -148,5 +205,18 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: 500,
     fontSize: 12,
+  },
+  banner: {
+    height: 150,
+    width: "90%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  bannerImage: {
+    height: 150,
+    width: "100%",
+    resizeMode: "cover",
+    borderRadius: 20,
   },
 });
