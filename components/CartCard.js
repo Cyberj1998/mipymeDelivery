@@ -15,7 +15,7 @@ export default function CartCard({ item }) {
     <View
       style={[
         styles.card,
-        { backgroundColor: theme === "light" ? "#eeeeee" : "#5C5470" },
+        { backgroundColor: theme === "light" ? "#f0f0f0" : "#4a4a4a" },
       ]}
     >
       <View style={styles.infoContainer}>

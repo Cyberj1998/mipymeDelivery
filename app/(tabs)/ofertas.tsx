@@ -9,10 +9,11 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Banner from "../../assets/images/icons/banner.png";
+import Banner from "../../assets/images/banner.png";
 
 export default function ofertas() {
   const databaseCache = useCartStore((state) => state.databaseCache);
+  const theme = useCartStore((state) => state.theme);
 
   const discountedProducts = useMemo(() => {
     return databaseCache.filter((item: any) => item.oferta === true);
@@ -32,7 +33,12 @@ export default function ofertas() {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        { backgroundColor: theme === "light" ? "white" : "#2b2b2b" },
+      ]}
+    >
       <View style={styles.banner}>
         <Image source={Banner} style={styles.bannerImage} />
       </View>
@@ -50,8 +56,6 @@ export default function ofertas() {
 
 const styles = StyleSheet.create({
   container: {
-    borderWidth: 2,
-    borderColor: "red",
     flex: 1,
     display: "flex",
     alignItems: "center",

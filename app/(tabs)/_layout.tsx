@@ -32,11 +32,11 @@ export default function TabLayout() {
             left: 20,
             right: 20,
             height: 60,
-            backgroundColor: theme === "light" ? "#488dd7" : "#b0a1d5",
+            backgroundColor: theme === "light" ? "#3e8dc2" : "#b0a1d5",
           },
         ],
         tabBarLabelStyle: styles.tabBarLabel,
-        tabBarActiveTintColor: "#488dd7",
+        tabBarActiveTintColor: "#3e8dc2",
         tabBarInactiveTintColor: "#333333",
       }}
     >
@@ -54,7 +54,7 @@ export default function TabLayout() {
               <Image
                 style={[
                   styles.icon,
-                  { tintColor: focused ? "#488dd7" : "#333333" },
+                  { tintColor: focused ? "#3e8dc2" : "#333333" },
                 ]}
                 source={require("../../assets/images/store.png")}
                 contentFit="cover"
@@ -78,7 +78,7 @@ export default function TabLayout() {
               <Image
                 style={[
                   styles.icon,
-                  { tintColor: focused ? "#488dd7" : "#333333" },
+                  { tintColor: focused ? "#3e8dc2" : "#333333" },
                 ]}
                 source={require("../../assets/images/icons/heart.png")}
                 contentFit="cover"
@@ -102,7 +102,7 @@ export default function TabLayout() {
               <Image
                 style={[
                   styles.icon,
-                  { tintColor: focused ? "#488dd7" : "#333333" },
+                  { tintColor: focused ? "#3e8dc2" : "#333333" },
                 ]}
                 source={require("../../assets/images/icons/offer.png")}
                 contentFit="cover"
@@ -127,7 +127,7 @@ export default function TabLayout() {
               <Image
                 style={[
                   styles.icon,
-                  { tintColor: focused ? "#488dd7" : "#333333" },
+                  { tintColor: focused ? "#3e8dc2" : "#333333" },
                 ]}
                 source={require("../../assets/images/cart.png")}
                 contentFit="cover"

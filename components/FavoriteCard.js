@@ -12,7 +12,7 @@ import AseoIcon from "../assets/images/icons/aseo.png";
 import BebidasIcon from "../assets/images/icons/bebidas.png";
 import CarnicosIcon from "../assets/images/icons/carnicos.png";
 import ConfiturasIcon from "../assets/images/icons/confituras.png";
-import Heart from "../assets/images/icons/heart.png";
+import DeleteIcon from "../assets/images/icons/delete.png";
 import Micelaneas from "../assets/images/icons/micelaneas.png";
 import Offer from "../assets/images/icons/offer.png";
 import Store from "../assets/images/icons/store.png";
@@ -35,34 +35,38 @@ export default function ProductCard({ item }) {
         soundObject = sound;
       }
 
-      // Play from start
       await soundObject.replayAsync();
     } catch (error) {
       console.log("Error playing sound", error);
     }
   };
 
-  //---------------------handle add to Cache Storage Function
+  //---------------------handle remove from Cache Storage Function
 
-  const saveToAsyncStorage = async (item) => {
+  const removeFromAsyncStorage = async (item) => {
     try {
       const jsonValue = await AsyncStorage.getItem(CACHE_STORAGE_KEY);
       let cache = jsonValue != null ? JSON.parse(jsonValue) : [];
 
-      const isDuplicate = cache.some((cacheItem) => cacheItem.$id === item.$id);
+      // Filter out the item with matching $id
+      const updatedCache = cache.filter(
+        (cacheItem) => cacheItem.$id !== item.$id,
+      );
 
-      if (isDuplicate) {
-        console.log("Item already in cart");
-        return false;
+      // Only update storage if something was actually removed
+      if (updatedCache.length !== cache.length) {
+        await AsyncStorage.setItem(
+          CACHE_STORAGE_KEY,
+          JSON.stringify(updatedCache),
+        );
+        console.log("✅ Item removed:", item.$id);
+        return true;
       }
 
-      // Add and save
-      cache.push(item);
-      await AsyncStorage.setItem(CACHE_STORAGE_KEY, JSON.stringify(cache));
-      console.log(cache);
-      return true;
+      console.log("ℹ️ Item not found in storage");
+      return false;
     } catch (error) {
-      console.error("AsyncStorage Error:", error);
+      console.error("❌ AsyncStorage Error:", error);
       return false;
     }
   };
@@ -87,10 +91,10 @@ export default function ProductCard({ item }) {
         ""
       )}
       <TouchableOpacity
-        onPress={() => saveToAsyncStorage(item)}
+        onPress={() => removeFromAsyncStorage(item)}
         style={styles.addToFavorite}
       >
-        <Image source={Heart} style={styles.favorite} />
+        <Image source={DeleteIcon} style={styles.favorite} />
       </TouchableOpacity>
       <Image source={{ uri: item.image }} style={styles.productImage} />
       <View style={styles.textContainer}>
@@ -136,7 +140,7 @@ export default function ProductCard({ item }) {
         <TouchableOpacity
           style={[
             styles.addButton,
-            { backgroundColor: theme === "light" ? "#5ab9d1" : "#cfa1d7" },
+            { backgroundColor: theme === "light" ? "#3e8dc2" : "#cfa1d7" },
           ]}
           onPress={() => handleAddToCart(item)}
         >
@@ -157,114 +161,95 @@ export default function ProductCard({ item }) {
 
 const styles = StyleSheet.create({
   productCard: {
-    borderRadius: 12,
-    marginHorizontal: 10,
+    flexDirection: "row",
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    marginHorizontal: 16,
     marginVertical: 8,
-    flexDirection: "column",
-    justifyContent: "space-between",
-    width: 160,
-    flexShrink: false,
+    padding: 12,
+    alignItems: "center",
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-    overflow: "visible",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 4,
+    position: "relative",
+    width: 350,
   },
   productImage: {
-    margin: 5,
-    width: 150,
-    height: 150,
-    resizeMode: "contain",
+    width: 100,
+    height: 100,
+    borderRadius: 12,
+    resizeMode: "cover",
   },
   textContainer: {
-    padding: 12,
+    flex: 1,
+    marginLeft: 16,
+    justifyContent: "center",
   },
   productName: {
-    fontSize: 15,
-    width: "100%",
-    fontWeight: "bold",
-    marginBottom: 6,
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#1a1a1a",
+    marginBottom: 4,
+  },
+  priceCategoryContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 4,
   },
   productPrice: {
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: "bold",
     color: "#00a746",
   },
-  addButton: {
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    marginVertical: 10,
-    alignSelf: "center",
-    width: "100%",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  addButtonText: {
-    fontSize: 12,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  categoryIcon: {
-    height: 25,
-    width: 25,
-    resizeMode: "contain",
-  },
-  priceCategoryContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  idText: {
-    color: "white",
-    borderRadius: 12,
-    backgroundColor: "#969696",
-  },
   storeContainer: {
-    display: "flex",
     flexDirection: "row",
-    justifyContent: "flex-start",
     alignItems: "center",
-  },
-  storeIcon: {
-    height: 25,
-    width: 25,
-    resizeMode: "contain",
+    marginTop: 4,
   },
   storeText: {
-    fontSize: 12,
-    fontWeight: 500,
-    marginLeft: 5,
+    fontSize: 13,
+    fontWeight: "500",
+    color: "#777",
+    marginLeft: 4,
   },
-  cartIcon: {
-    height: 20,
-    width: 20,
+  storeIcon: {
+    height: 16,
+    width: 16,
+    resizeMode: "contain",
+  },
+  addButton: {
+    backgroundColor: "#00a746",
+    borderRadius: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    marginLeft: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    height: 40,
+    width: 150,
+  },
+  addButtonText: {
+    fontSize: 13,
+    fontWeight: "bold",
+    color: "#fff",
   },
   addToFavorite: {
-    height: 20,
-    width: 20,
     position: "absolute",
-    top: 5,
-    right: 5,
-    zIndex: 50,
-  },
-  favorite: {
-    height: 20,
-    width: 20,
+    top: 12,
+    right: 12,
+    zIndex: 10,
   },
   offerIcon: {
-    height: 20,
-    width: 20,
     position: "absolute",
-    top: 5,
-    left: 5,
-    zIndex: 50,
+    top: 12,
+    left: 12,
+    zIndex: 10,
   },
+  categoryIcon: { height: 20, width: 20 },
+  cartIcon: { height: 20, width: 20 },
+  favorite: { height: 22, width: 22 },
+  offerIconStyle: { height: 22, width: 22 },
 });

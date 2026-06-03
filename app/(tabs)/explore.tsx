@@ -89,7 +89,7 @@ export default function TabTwoScreen() {
     <SafeAreaView
       style={[
         styles.container,
-        { backgroundColor: theme === "light" ? "white" : "#352F44" },
+        { backgroundColor: theme === "light" ? "white" : "#2b2b2b" },
       ]}
     >
       {modal ? (
@@ -97,7 +97,7 @@ export default function TabTwoScreen() {
           behavior="height"
           style={[
             styles.modal,
-            { backgroundColor: theme === "light" ? "#fff" : "#383344" },
+            { backgroundColor: theme === "light" ? "#fff" : "#575757" },
           ]}
         >
           <TouchableOpacity
@@ -109,7 +109,7 @@ export default function TabTwoScreen() {
           <TextInput
             style={[
               styles.textArea,
-              { backgroundColor: theme === "light" ? "#ffff" : "#5C5470" },
+              { backgroundColor: theme === "light" ? "#ffff" : "#4a4a4a" },
               { color: theme === "light" ? "" : "white" },
             ]}
             placeholder="Introduzca su direccion..."
@@ -122,7 +122,7 @@ export default function TabTwoScreen() {
           <TouchableOpacity
             style={[
               styles.checkoutButton,
-              { backgroundColor: theme === "light" ? "#15caca" : "#b0a1d5" },
+              { backgroundColor: theme === "light" ? "#5ab9d1" : "#cfa1d7" },
             ]}
             onPress={() => handleRequest()}
           >
@@ -163,13 +163,13 @@ export default function TabTwoScreen() {
         <View
           style={[
             styles.invisibleContainer,
-            { backgroundColor: theme === "light" ? "#ffffff" : "#352F44" },
+            { backgroundColor: theme === "light" ? "#ffffff" : "#2b2b2b" },
           ]}
         >
           <View
             style={[
               styles.paymentContainer,
-              { backgroundColor: theme === "light" ? "#eeeeee" : "#5C5470" },
+              { backgroundColor: theme === "light" ? "#eeeeee" : "#4a4a4a" },
             ]}
           >
             <Text
@@ -191,7 +191,7 @@ export default function TabTwoScreen() {
             <TouchableOpacity
               style={[
                 styles.checkoutButton,
-                { backgroundColor: theme === "light" ? "#15caca" : "#b0a1d5" },
+                { backgroundColor: theme === "light" ? "#5ab9d1" : "#cfa1d7" },
               ]}
               onPress={() => handleModal()}
             >

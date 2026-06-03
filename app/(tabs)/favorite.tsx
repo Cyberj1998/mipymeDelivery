@@ -1,14 +1,18 @@
-import ProductCard from "@/components/ProductCard";
+import useCartStore from "@/store/CartSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useState } from "react";
 import {
-    FlatList,
-    ListRenderItem,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
+  FlatList,
+  Image,
+  ListRenderItem,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import TrashIcon from "../../assets/images/icons/trash.png";
+import FavoriteCard from "../../components/FavoriteCard";
 const CACHE_STORAGE_KEY = "@shopping_cart";
 
 export default function favorite() {
@@ -23,12 +27,13 @@ export default function favorite() {
   }
 
   const renderProductItem: ListRenderItem<Product> = ({ item }) => (
-    <ProductCard item={item} />
+    <FavoriteCard item={item} />
   );
 
   //---------------------states
   const [asyncStorageData, setAsyncStorageData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const theme = useCartStore((state) => state.theme);
 
   //----------------------------get items function
   const getStoredItems = async () => {
@@ -40,7 +45,6 @@ export default function favorite() {
 
         console.log("📦 Items retrieved:", items);
         setAsyncStorageData(items);
-        console.log("sdasadaasdasasdasdsdas");
         return items;
       }
 
@@ -68,24 +72,33 @@ export default function favorite() {
   };
 
   //-----------------use effect
-  useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(true);
-
-      await getStoredItems();
-      setIsLoading(false);
-    };
-
-    loadData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const loadData = async () => {
+        setIsLoading(true);
+        await getStoredItems();
+        setIsLoading(false);
+      };
+      loadData();
+    }, []),
+  );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        { backgroundColor: theme === "light" ? "white" : "#2b2b2b" },
+      ]}
+    >
       <TouchableOpacity
-        style={styles.cleanCache}
+        style={[
+          styles.cleanCache,
+          { backgroundColor: theme === "light" ? "#3e8dc2" : "#b0a1d5" },
+        ]}
         onPress={() => clearCartStorage()}
       >
-        <Text>Borrar Favoritos</Text>
+        <Image source={TrashIcon} style={styles.trash} />
+        <Text style={styles.cleanCacheText}>Borrar Favoritos</Text>
       </TouchableOpacity>
       {!isLoading ? (
         <FlatList
@@ -93,7 +106,6 @@ export default function favorite() {
           data={asyncStorageData}
           renderItem={renderProductItem}
           keyExtractor={(item) => item.$id}
-          numColumns={2}
           contentContainerStyle={styles.flatListContentContainer}
         />
       ) : (
@@ -104,9 +116,10 @@ export default function favorite() {
 }
 const styles = StyleSheet.create({
   container: {
-    borderWidth: 2,
-    borderColor: "red",
     flex: 1,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
   flatList: {
     width: "100%",
@@ -118,8 +131,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   cleanCache: {
-    backgroundColor: "blue",
+    borderRadius: 10,
     height: 50,
-    width: 100,
+    width: 120,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 10,
+  },
+  trash: {
+    height: 25,
+    width: 25,
+  },
+  cleanCacheText: {
+    color: "#fff",
+    fontWeight: 500,
+    fontSize: 12,
   },
 });
